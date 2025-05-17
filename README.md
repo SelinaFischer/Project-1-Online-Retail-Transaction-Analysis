@@ -203,6 +203,72 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 ```plaintext
 (524878, 9)
 ```
+## Visualisation Steps
+
+### **Step 1: Check distribution of Quantity - the outliers**
+
+- The horizontal line inside the box represents the median quantity (50%)
+- The box spans the interquartile ragne (IQR) - the middle 50% of the values between 25% and 75%
+- The whiskers extend to valueswithin 1.5 x IQR from the box
+- The indvidual points to the right are outliers, the quantities are > 70,000 units sold in one invoice. The large transactions could be wholesale or bulk purchase.
+- However, most of the sales quantities are in the low range between 1 and 10 units per transaction 
+
+![Boxplot of Qty ](image.png)
+
+### **Now zoomed-in the Boxplot to Qty < = 100 units**
+
+`sns.boxplot(x=df_cleaned[df_cleaned['Quantity'] < 100]['Quantity'])`  
+`plt.title("Boxplot of Quantity (Zoomed In - under 100)")`  
+`plt.show()`
+
+![Boxplot qty <=100](image-1.png)
+
+### **From the above visual it shows that most orders are small:**  
+
+- **The box is compressed near 0, indicating that most quantity values fall between 1 and ~10 units**  
+  - This suggests that many customers purchase low quantities per transaction   
+- **Median Quantity is low:**  
+  - The vertical line in the box (the median) appears around 3–4 units  
+  - This confirms a skew toward smaller order sizes  
+- **Long tail of outliers:**  
+  - There are many black dots (outliers) stretching horizontally up to 100  
+  - These represent unusually high quantity purchases that occur less frequently    
+- **Outliers go as high as 99 in this zoomed-in version, which may indicate:**
+  - B2B bulk purchases  
+  - Manual data entry (someone entered a batch of 99)  
+  - High demand products (e.g. sold in sets)    
+
+
+
+### **Step 2: Histogram to Complement the above Boxplot**   
+
+   *Histogram to show Quantity Distribution (Zoomed In)*  
+  `df_zoom = df_cleaned[df_cleaned['Quantity'] < 100]`  
+  `plt.figure(figsize=(8, 4))`  
+  `plt.hist(df_zoom['Quantity'], bins=30, color='skyblue', edgecolor='black')`  
+  `plt.title('Histogram of Quantity (Zoomed In - under 100)')`  
+  `plt.xlabel('Quantity')`  
+  `plt.ylabel('Frequency')`  
+  `plt.tight_layout()`  
+  `plt.show()`  
+
+![alt text](image-2.png)
+
+### **From the above visual it shows that massive spike near Quantity = 1–3:**    
+- Most purchases are small-volume, which suggests that primary customers are likely *individual consumers*  
+- Long tail toward higher quantities:  
+  - A smaller number of transactions involve quantities of 10, 20, 50 and up to 100 units but they are rare compared to single unit sales
+
+
+
+
+
+
+
+
+
+
+
 
 
 
