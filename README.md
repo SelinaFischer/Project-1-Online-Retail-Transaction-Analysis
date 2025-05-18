@@ -133,7 +133,6 @@ memory usage: 37.1+ MB
 `df_cleaned.describe()` output:
 
 ```plaintext
-```plaintext
        Quantity         InvoiceDate          UnitPrice     CustomerID
 count  524878.000     524878                524878.000    524878.000
 mean       10.617     2011-07-04 15:30:16   3.923         15287.631
@@ -205,7 +204,7 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 ```
 ## Data Visualisation Analysis:
 
-### **1: Check distribution of Quantity - the outliers**
+### 1: Check distribution of Quantity - the outliers
 
 - The horizontal line inside the box represents the median quantity (50%)
 - The box spans the interquartile ragne (IQR) - the middle 50% of the values between 25% and 75%
@@ -215,15 +214,17 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 
 ![Boxplot of Qty ](image.png)
 
-### **Now zoomed-in the Boxplot to Qty < = 100 units**
-
-`sns.boxplot(x=df_cleaned[df_cleaned['Quantity'] < 100]['Quantity'])`  
-`plt.title("Boxplot of Quantity (Zoomed In - under 100)")`  
-`plt.show()`
-
+### Now zoomed-in the Boxplot to Qty < = 100 units
+```plaintext
+sns.boxplot(x=df_cleaned[df_cleaned['Quantity'] < 100]['Quantity']) 
+plt.title("Boxplot of Quantity (Zoomed In - under 100)")
+plt.show()
+```
 ![Boxplot qty <=100](image-1.png)
 
-### **From the above visual it shows that most orders are small:**  
+<br>
+
+### From the above visual it shows that most orders are small:
 
 - **The box is compressed near 0, indicating that most quantity values fall between 1 and ~10 units**  
   - This suggests that many customers purchase low quantities per transaction   
@@ -238,34 +239,37 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
   - Manual data entry (someone entered a batch of 99)  
   - High demand products (e.g. sold in sets)    
 
+<br>
 
+### 2: Histogram to Complement the Boxplot Analysis
 
-### **2: Histogram to Complement the Boxplot analysis**   
-
-   *Histogram to show Quantity Distribution (Zoomed In)*  
-  `df_zoom = df_cleaned[df_cleaned['Quantity'] < 100]`  
-  `plt.figure(figsize=(8, 4))`  
-  `plt.hist(df_zoom['Quantity'], bins=30, color='skyblue', edgecolor='black')`  
-  `plt.title('Histogram of Quantity (Zoomed In - under 100)')`  
-  `plt.xlabel('Quantity')`  
-  `plt.ylabel('Frequency')`  
-  `plt.tight_layout()`  
-  `plt.show()`  
-
+*This zoomed-in histogram illustrates the distribution of quantities purchased*  
+```plaintext
+  df_zoom = df_cleaned[df_cleaned['Quantity'] < 100]  
+  plt.figure(figsize=(8, 4))
+  plt.hist(df_zoom['Quantity'], bins=30, color='skyblue', edgecolor='black') 
+  plt.title('Histogram of Quantity (Zoomed In - under 100)')
+  plt.xlabel('Quantity')
+  plt.ylabel('Frequency')
+  plt.tight_layout()
+  plt.show()
+```
 ![alt text](image-2.png)
 
-### **From the above visual it shows that massive spike near Quantity = 1–3:**    
+<br>
+### From the above visual it shows that massive spike near Quantity = 1–3: 
 - Most purchases are small-volume, which suggests that primary customers are likely *individual consumers*  
 - Long tail toward higher quantities:  
   - A smaller number of transactions involve quantities of 10, 20, 50 and up to 100 units but they are rare compared to single unit sales
 
+<br>
 
-
-### **3: Summary Stats Analysis Cover: ** 
+### 3: Summary Stats Analysis Cover: 
 - Total Revenue  
 - Avarage Transaction Value  
 - Unique Customers  
 - Sales Period     
+
 ```plaintext
 (1) This sales period captures the entire date range from the dataset: (01Dec 2010 - 09Dec 2011)  
 
@@ -279,6 +283,8 @@ summary_stats = pd.DataFrame({
 display(summary_stats)
 ```
 ![alt text](image-4.png)
+
+<br>
 
 ```plaintext
 (2) This sales period captures 12months  date range from the dataset: (01Dec 2010 - 01Dec 2011)    
@@ -295,9 +301,9 @@ display(summary_stats)
 ```
 ![alt text](image-5.png)
 
+<br>
 
-
-### **4: Monthly sales trend over time: (01Dec 2010 - 09Dec 2011) ** 
+### 4: Monthly sales trend over time: (01Dec 2010 - 09Dec 2011) 
 
 ```plaintext
 import matplotlib.dates as mdates
@@ -323,12 +329,16 @@ plt.show()
 ```
 ![alt text](image-9.png)
 
+<br>
+
 ### Monthly Sales Trend Interpretation:   
 - **Dec 2010**: Strong baseline sales driven by seasonal holiday shopping
 - **Jan–Feb 2011**: Typical Q1 slump, consistent with post-holiday spending declines
 - **Mar–Aug 2011** shows steady performance with minor fluctuations
 - **Sep–Nov 2011**: Sales increased significantly, peaking in **November**, potentially due to Q4 holiday campaigns or Black Friday sales. Indicates an opportunity to run seasonal campaigns and stock top-performing items
 - **Dec 2011**: Noticeable drop similar to December 2010, showing a consistent **post-holiday pattern**, validating a cyclical holiday trend
+
+<br>
 
 ### Strategic Implications:
 
@@ -337,14 +347,128 @@ plt.show()
 | Peak in November | Launch **holiday promotions earlier** to maximise November-December sales |
 | Q1 dip | Use **New Year offers or flash sales** to boost slow months demand|
 | Mid-year Consistent growth | MMaintain **steady promotions** and test campaigns to attract new customers|
-| December drop| Plan **post-November re-engagement** or clearance strategies to extend peak period|  
+| December drop| Plan **post-November re-engagement** or clearance strategies to extend peak period|    
+      
+<br>
+
+### 5: Customer Segmentation - Purchase behaviour and characteristics
+
+**Define customer segment by R=Recency, F=Frequency and M=Monetary using score (1-4)**  
+
+**Recency (R)**: Measures how recently a customer has made a purchase   
+ Computed using quartiles, with lower recency values (more recent purchases) getting a higher score  
+  - Score 4: Most recent purchasers – highly engaged  
+  - Score 3: Recent purchasers  
+  - Score 2: Moderately recent  
+  - Score 1: Least recent – potentially inactive or lapsed  
+
+**Frequency (F)**: Measures how often a customer makes purchases  
+Computed based on ranking and divided into quartiles, with higher frequency getting a higher score
+ - Score 4: Very frequent purchasers – loyal customers.
+ - Score 3: Frequent purchasers.
+ - Score 2: Occasional purchasers.
+ - Score 1: Infrequent purchasers.
+
+**Monetary (M)**: Measures how much a customer has spent  
+Computed using quartiles, with higher spending getting a higher score  
+ - Score 4: Top spenders – high-value customers  
+ - Score 3: Above-average spenders  
+ - Score 2: Average spenders  
+ - Score 1: Low spenders  
+
+```plaintext
+# R, F, M scores are computed as below
+rfm['R_Score'] = pd.qcut(rfm['Recency'], 4, labels=[4, 3, 2, 1]).astype(int)
+rfm['F_Score'] = pd.qcut(rfm['Frequency'].rank(method='first'), 4, labels=[1, 2, 3, 4]).astype(int)
+rfm['M_Score'] = pd.qcut(rfm['Monetary'], 4, labels=[1, 2, 3, 4]).astype(int)
+
+# Define RFM group logic using R, F, M thresholds
+at_risk_mask = (rfm['R_Score'] == 1) & (rfm['F_Score'] <= 2) & (rfm['M_Score'] <= 2)
+high_value_mask = (rfm['R_Score'] == 4) & (rfm['F_Score'] == 4) & (rfm['M_Score'] == 4)
+less_recent_high_mask = (rfm['R_Score'] <= 3) & (rfm['F_Score'] >= 3) & (rfm['M_Score'] >= 3)
+moderate_mask = ~(at_risk_mask | high_value_mask | less_recent_high_mask)
+
+# Count customers in each group
+at_risk_count = rfm[at_risk_mask].shape[0]
+high_value_count = rfm[high_value_mask].shape[0]
+less_recent_high_count = rfm[less_recent_high_mask].shape[0]
+moderate_count = rfm[moderate_mask].shape[0]
+total_customers = rfm.shape[0]
+
+# Show each customer count
+print("At-Risk Customers:", at_risk_count)
+print("High-Value Customers:", high_value_count)
+print("High-Value (Less Recent):", less_recent_high_count)
+print("Moderate Customers:", moderate_count)
+print("Total Unique Customers:", total_customers)
+```
+<br>
+
+|Customer Segment| Customer Count| Customer %|
+| ---------------| --------------| -------------|
+|High-Value Customers| 488| 11.25%|
+|High-Value (Less Recent)| 969| 22.34%
+|Moderate Customers| 2092| 48.22$|
+|At-Risk Customers| 789| 18.19%|
+|**Total Unique Customers**| **4338** 
 
 
+```plaintext
+# Create a Bar Chart to Visualise the Customer Segment Distribution
+
+import matplotlib.pyplot as plt
+
+# Set segment order and colours and %
+segment_counts_ordered = {
+    'High-Value': (high_value_count, round(high_value_count / total_customers * 100, 2)),
+    'Less Recent High-Value': (less_recent_high_count, round(less_recent_high_count / total_customers * 100, 2)),
+    'Moderate High-Value': (moderate_count, round(moderate_count / total_customers * 100, 2)),
+    'At-Risk': (at_risk_count, round(at_risk_count / total_customers * 100, 2))
+}
+
+segment_colours = {
+    'High-Value': 'green',
+    'Less Recent High-Value': 'orange',
+    'Moderate High-Value': 'skyblue',
+    'At-Risk': 'red'
+}
+
+# Create the bar chart
+plt.figure(figsize=(10, 5))
+bars = plt.bar(
+    segment_counts_ordered.keys(),
+    [v[0] for v in segment_counts_ordered.values()],
+    color=[segment_colours[k] for k in segment_counts_ordered.keys()]
+)
+
+# Add count inside each bar, and % above each bar
+for bar, (count, pct) in zip(bars, segment_counts_ordered.values()):
+    plt.text(bar.get_x() + bar.get_width()/2, count - 100, f'{count}', ha='center', va='top', fontsize=10, color='black')  # Inside bar
+    plt.text(bar.get_x() + bar.get_width()/2, count + 30, f'{pct}%', ha='center', va='bottom', fontsize=10, fontweight='bold')  # Above bar
+
+# Chart styling
+plt.title('RFM Customer Segmentation Distribution')
+plt.xlabel('Customer Segment')
+plt.ylabel('Number of Customers')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+```
+![alt text](image-13.png)
 
 
+<br>
+
+### 6: Segment Insights & Strategic Recommendations  
+
+**Segment-based marketing can dramatically improve ROI by focusing the following efforts**
+- **High-Value Customers (11.25%)**: Recency = 4, Frequency = 4, Monetary = 4. This segment must be retained at all costs – losing them would impact revenue significantly. Recommend loyalty rewards and personalised VIP campaigns
+- **Less Recent High-Value (22.34%)**: These customers were previously high spenders/frequent buyers but haven’t engaged recently. Use win-back strategies such as exclusive reactivation offers or feedback requests
+- **Moderate High-Value (48.22%)**: These customers are mid-tier in value, representing the largest share Opportunity to nurture with upselling, bundling and seasonal promotions to boost engagement
+- **At-Risk Customers (18.19%)**: R = 1 and low frequency and monetary value. Consider low-cost reactivation campaigns. If unresponsive, consider segment cleanup or shift budget elsewhere
 
 
-
+<br>
 
 
 
@@ -354,6 +478,8 @@ plt.show()
 - Detect seasonal trends and sales patterns
 - Propose pricing, promotion, and customer reactivation strategies
 
+
+<br>
 
 ## Project Plan
 ### High-Level Steps:
