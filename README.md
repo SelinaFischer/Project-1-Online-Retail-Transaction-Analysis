@@ -150,19 +150,20 @@ Now the total count for Quantity, InvoiceDate, UnitPrice and CustomerID all have
 `max`  Qty <= 80995 and UnitPrice = 13541.330
 
 
-**Step 9: Add a new column `TotalPrice` to support Revenue Analysis**
+<br>
+
+### Step 9: Add a new column `TotalPrice` to support Revenue Analysis
+
   `df_cleaned['TotalPrice'] = df_cleaned['Quantity'] * df_cleaned['UnitPrice']`
 
-```Plaintext
-InvoiceNo StockCode                          Description  Quantity        InvoiceDate  UnitPrice  CustomerID         Country  TotalPrice
-0    536365    85123A   WHITE HANGING HEART T-LIGHT HOLDER         6  2010-12-01 08:26:00       2.55       17850  United Kingdom       15.30
-1    536365     71053                  WHITE METAL LANTERN         6  2010-12-01 08:26:00       3.39       17850  United Kingdom       20.34
-2    536365    84406B       CREAM CUPID HEARTS COAT HANGER         8  2010-12-01 08:26:00       2.75       17850  United Kingdom       22.00
-3    536365    84029G  KNITTED UNION FLAG HOT WATER BOTTLE         6  2010-12-01 08:26:00       3.39       17850  United Kingdom       20.34
-4    536365    84029E       RED WOOLLY HOTTIE WHITE HEART.         6  2010-12-01 08:26:00       3.39       17850  United Kingdom       20.34
-```
+<br>
 
-**Step 10 check the final cleaned data output
+![alt text](image-19.png)
+
+<br>
+
+**Step 10 check the final cleaned data output**
+
 `df_cleaned.info()`
 
 ```plaintext
