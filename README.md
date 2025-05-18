@@ -202,7 +202,7 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 ```plaintext
 (524878, 9)
 ```
-## Data Visualisation Analysis:
+## Data Visualisation Analysis
 
 ### 1: Check distribution of Quantity - the outliers
 
@@ -224,7 +224,7 @@ plt.show()
 
 <br>
 
-### From the above visual it shows that most orders are small:
+### From the above visual it shows that most orders are small
 
 - **The box is compressed near 0, indicating that most quantity values fall between 1 and ~10 units**  
   - This suggests that many customers purchase low quantities per transaction   
@@ -257,18 +257,21 @@ plt.show()
 ![alt text](image-2.png)
 
 <br>
-### From the above visual it shows that massive spike near Quantity = 1–3: 
+
+### 2.1. From the above visual it shows that massive spike near Quantity = 1–3 
 - Most purchases are small-volume, which suggests that primary customers are likely *individual consumers*  
 - Long tail toward higher quantities:  
   - A smaller number of transactions involve quantities of 10, 20, 50 and up to 100 units but they are rare compared to single unit sales
 
 <br>
 
-### 3: Summary Stats Analysis Cover: 
-- Total Revenue  
-- Avarage Transaction Value  
+## 3: Descriptive Statistics Summary
+
+- Total Revenue (£)
+- Average Transaction Value  
 - Unique Customers  
-- Sales Period     
+- Sales Period 
+<br>
 
 ```plaintext
 (1) This sales period captures the entire date range from the dataset: (01Dec 2010 - 09Dec 2011)  
@@ -282,6 +285,8 @@ summary_stats = pd.DataFrame({
 })
 display(summary_stats)
 ```
+<br>
+
 ![alt text](image-4.png)
 
 <br>
@@ -299,11 +304,15 @@ summary_stats = pd.DataFrame({
 })
 display(summary_stats)
 ```
+<br>
+
 ![alt text](image-5.png)
 
 <br>
 
-### 4: Monthly sales trend over time: (01Dec 2010 - 09Dec 2011) 
+## 4: Trend Analysis: ( 1Dec 2010 - 9Dec 2011 ) 
+
+*I include the sales period from 02-09Dec 2011 so that I am able to observe the trend behaviour after November month.*
 
 ```plaintext
 import matplotlib.dates as mdates
@@ -327,11 +336,14 @@ plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b-%Y'))
 plt.show()
 ```
+<br>
+
 ![alt text](image-9.png)
 
 <br>
 
-### Monthly Sales Trend Interpretation:   
+### 4.1. Monthly Sales Trend Interpretation
+
 - **Dec 2010**: Strong baseline sales driven by seasonal holiday shopping
 - **Jan–Feb 2011**: Typical Q1 slump, consistent with post-holiday spending declines
 - **Mar–Aug 2011** shows steady performance with minor fluctuations
@@ -340,7 +352,7 @@ plt.show()
 
 <br>
 
-### Strategic Implications:
+### 4.2. Strategic Implications
 
 | Observation | Suggested Action |
 | ----------- | ----------- |
@@ -351,7 +363,7 @@ plt.show()
       
 <br>
 
-### 5: Customer Segmentation - Purchase behaviour and characteristics
+## 5: Customer Segmentation - Purchase behaviour and characteristics
 
 **Define customer segment by R=Recency, F=Frequency and M=Monetary using score (1-4)**  
 
@@ -412,6 +424,7 @@ print("Total Unique Customers:", total_customers)
 |At-Risk Customers| 789| 18.19%|
 |**Total Unique Customers**| **4338** 
 
+<br>
 
 ```plaintext
 # Create a Bar Chart to Visualise the Customer Segment Distribution
@@ -454,12 +467,14 @@ plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
 ```
+<br>
+
 ![alt text](image-13.png)
 
 
 <br>
 
-### 6: Segment Insights & Strategic Recommendations  
+### 5.1. Segment Insights & Strategic Recommendations  
 
 **Segment-based marketing can dramatically improve ROI by focusing the following efforts**
 - **High-Value Customers (11.25%)**: Recency = 4, Frequency = 4, Monetary = 4. This segment must be retained at all costs – losing them would impact revenue significantly. Recommend loyalty rewards and personalised VIP campaigns
@@ -469,6 +484,332 @@ plt.show()
 
 
 <br>
+
+## 6: Product Analysis
+
+### 6.1. Top 10 Products by Revenue (total sales): (1Dec 2010 - 9Dec 2011)
+
+**Calculated by Sales Volumn * UnitPrice**  
+```plaintext
+# exclude all the non product - manual, adjut, postage, carriage, fee, bank charges
+
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import seaborn as sns
+
+# Data prep
+non_product_keywords = ['manual', 'adjust', 'postage', 'carriage', 'fee', 'bank charges']
+df_products_only = df_cleaned[~df_cleaned['Description'].str.lower().str.contains('|'.join(non_product_keywords), na=False)].copy()
+df_products_only.loc[:, 'Description'] = df_products_only['Description'].str.replace('Â', '', regex=False)
+
+top_total_sales_products = df_products_only.groupby('Description')['TotalPrice'].sum().nlargest(10).reset_index()
+
+# Plot
+plt.figure(figsize=(10, 6))
+ax = sns.barplot(
+    data=top_total_sales_products,
+    x='TotalPrice',
+    y='Description',
+    hue='Description',
+    palette='viridis',
+    dodge=False,
+    legend=False
+)
+
+# Format x-axis ticks with commas
+formatter = FuncFormatter(lambda x, _: f'{x:,.0f}')
+ax.xaxis.set_major_formatter(formatter)
+
+# Add value labels inside the bars
+for i, (value, name) in enumerate(zip(top_total_sales_products['TotalPrice'], top_total_sales_products['Description'])):
+    ax.text(
+        value - (value * 0.01),  # slight left offset from bar end
+        i,  # y-position based on index
+        f'£{value:,.0f}',
+        va='center',
+        ha='right',  # align text to the right so it stays inside
+        fontsize=9,
+        color='white',  # change to 'black' if bars are light-coloured
+        fontweight='bold'
+    )
+
+plt.title('Top 10 Products by Total Sales Value')
+plt.xlabel('Total Sales (£)')
+plt.ylabel('Product Description')
+plt.grid(axis='x', linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
+```
+<br>
+
+![alt text](image-15.png)
+
+<br>
+
+### 6.2.Top 10 Products by Average Unit Price
+In the following analysis, notice that gift voucher has £100 value but the average price is £83.33
+```plaintext
+# Get top 10 products by average unit price
+avg_unit_price_products = df_products_only.groupby('Description')['UnitPrice'].mean().nlargest(10).reset_index()
+
+# Bar chart
+plt.figure(figsize=(10, 6))
+ax = sns.barplot(
+    data=avg_unit_price_products,
+    x='UnitPrice',
+    y='Description',
+    hue='Description',        # ensures unique colors
+    palette='mako',
+    dodge=False,
+    legend=False              # disables extra legend
+)
+
+# Format x-axis
+formatter = FuncFormatter(lambda x, _: f'£{x:,.2f}')
+ax.xaxis.set_major_formatter(formatter)
+
+# Add value labels inside bars
+for i, (value, name) in enumerate(zip(avg_unit_price_products['UnitPrice'], avg_unit_price_products['Description'])):
+    ax.text(
+        value - (value * 0.01),
+        i,
+        f'£{value:,.2f}',
+        va='center',
+        ha='right',
+        fontsize=9,
+        color='white',
+        fontweight='bold'
+    )
+
+plt.title('Top 10 Products by Average Unit Price (Filtered)')
+plt.xlabel('Avg Unit Price (£)')
+plt.ylabel('Product Description')
+plt.grid(axis='x', linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
+```
+<br>
+
+![alt text](image-16.png)
+
+### *Then check and analyse the Gift Voucher sales pattern and got the follwoing result*
+There is only one gift voucher sold at £83.33 and the rest of them are at various values.
+
+`df_products_only[df_products_only['Description'].str.contains("gift voucher", case=False)].groupby('UnitPrice').size()`
+
+```plaintext
+UnitPrice
+8.33     8
+16.67    8
+17.02    1
+25.00    6
+25.53    1
+33.33    2
+34.04    1
+41.67    3
+42.55    1
+83.33    1
+dtype: int64
+```
+
+  **I wanted to make sure I use correct product description for the Gift Voucher, so I used the following code to identify them:**
+
+`df_products_only[df_products_only['Description'].str.contains('gift', case=False, na=False)]['Description'].unique()`
+
+```plaintext
+array(['stars gift tape', 'pack of 6 birdy gift tags',
+       'pack of 6 sweetie gift boxes', 'small stripes chocolate gift bag',
+       'pack of 6 handbag gift boxes', 'pack of 6 pannetone gift boxes',
+       'lilac diamante pen in gift box', 'hearts gift tape',
+       'cakes and bows gift  tape', 'yuletide images gift wrap set',
+       'blue  diamante pen in gift box', 'funky monkey gift bag medium',
+       'pink diamante pen in gift box', 'spaceboy gift wrap',
+       'silver diamante pen in gift box', 'gift bag psychedelic apples',
+       'new england mug w gift box', 'vintage caravan gift wrap',
+       'small polkadot chocolate gift bag',
+       'green  diamante pen in gift box',
+       'large stripes chocolate gift bag', 'pink paisley rose gift wrap',
+       'tea time teapot in gift box', 'tea time tea set in gift box',
+       'birthday banquet gift wrap', 'gift bag birthday',
+       'romantic images gift wrap set', 'curious images gift wrap set',
+       'blossom images gift wrap set', 'assorted easter gift tags',
+       'empire gift wrap', 'botanical rose gift wrap',
+       'set of three vintage gift wraps', 'mug , dotcomgiftshop.com',
+       'dotcomgiftshop gift voucher £40.00',
+       'dotcomgiftshop gift voucher £50.00',
+       'dotcomgiftshop gift voucher £30.00',
+       'dotcomgiftshop gift voucher £20.00', 'the king gift bag',
+       'botanical lavender gift wrap', 'dotcomgiftshop tea towel',
+       'dotcomgiftshop gift voucher £10.00',
+       'circus parade baby gift set', 'spaceboy baby gift set',
+       'i love london baby gift set', 'dolly girl baby gift set',
+       'botanical lily gift wrap', 'vintage christmas gift sack',
+       'the king gift bag 25x24x12cm', 'vintage christmas paper gift bag',
+       'gift bag large vintage christmas',
+       '6 gift tags vintage christmas', "6 gift tags 50's christmas",
+       'red spot paper gift bag', 'dotcomgiftshop gift voucher £100.00',
+       'red spot gift bag large', 'gift bag large spot',
+       'vintage christmas gift bag large',
+       "50's christmas paper gift bag", "50's christmas gift bag large",
+       "gift bag large 50's christmas", 'pack of 6 panettone gift boxes'],
+      dtype=object)
+
+```
+*From the above product_only list output,  5 gift cards values are identified. There is no £100 gift voucher.* 
+
+`dotcomgiftshop gift voucher £50.00`  
+`dotcomgiftshop gift voucher £40.00`  
+`dotcomgiftshop gift voucher £30.00`  
+`dotcomgiftshop gift voucher £20.00`  
+`dotcomgiftshop gift voucher £10.00`  
+
+<br>
+
+
+| Unit Price (£) | Quantity |
+|----------------|----------|
+| 8.33           | 8        |
+| 16.67          | 8        |
+| 17.02          | 1        |
+| 25.00          | 6        |
+| 25.53          | 1        |
+| 33.33          | 2        |
+| 34.04          | 1        |
+| 41.67          | 3        |
+| 42.55          | 1        |
+| 83.33          | 1        |
+| **Total**      | **Qty**  |
+| **£744.14**    | **32**   |
+
+<br>
+
+Since there are different gift voucher names/values, we should normalise the description before grouping them together. So that it output correct average unitprice.
+
+```plaintext
+
+# Normalise Gift voucher Description before grouping them:
+
+df_products_only['Description'] = (
+    df_products_only['Description']
+    .str.strip()
+    .str.lower()
+    .replace(r'dotcomgiftshop gift voucher £\d+\.00', 'gift voucher', regex=True)
+)
+```
+
+**Then run the new code**
+
+```plaintext
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+
+# 1. Clean and normalise descriptions
+df_products_only['Description'] = (
+    df_products_only['Description']
+    .str.strip()
+    .str.lower()
+    .replace(r'dotcomgiftshop gift voucher £\d+\.00', 'gift voucher', regex=True)
+)
+
+# 2. Calculate weighted average unit price (with deprecation warning handled)
+avg_unit_price_weighted = (
+    df_products_only.groupby('Description', group_keys=False)
+    .apply(
+        lambda x: pd.Series({
+            'Total': (x['UnitPrice'] * x['Quantity']).sum(),
+            'Quantity': x['Quantity'].sum(),
+            'AvgUnitPrice': (x['UnitPrice'] * x['Quantity']).sum() / x['Quantity'].sum()
+        }),
+        include_groups=False
+    )
+    .sort_values('AvgUnitPrice', ascending=False)
+    .reset_index()
+)
+
+# 3. Get top 10 products by average unit price
+top10 = avg_unit_price_weighted.nlargest(10, 'AvgUnitPrice')
+
+# 4. Plotting
+plt.figure(figsize=(10, 6))
+ax = sns.barplot(
+    data=top10,
+    x='AvgUnitPrice',
+    y='Description',
+    hue='Description',
+    palette='mako',
+    dodge=False,
+    legend=False
+)
+
+# Format x-axis ticks as £ currency
+formatter = FuncFormatter(lambda x, _: f'£{x:,.2f}')
+ax.xaxis.set_major_formatter(formatter)
+
+# Add value labels inside bars
+for i, (value, name) in enumerate(zip(top10['AvgUnitPrice'], top10['Description'])):
+    ax.text(
+        value - (value * 0.01),
+        i,
+        f'£{value:,.2f}',
+        va='center',
+        ha='right',
+        fontsize=9,
+        color='white',
+        fontweight='bold'
+    )
+
+plt.title('Top 10 Products by Average Unit Price (Filtered - Weighted)')
+plt.xlabel('Avg Unit Price (£)')
+plt.ylabel('Product Description')
+plt.grid(axis='x', linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
+```
+
+<br>
+
+![alt text](image-17.png)
+
+<br>
+
+### Following the normalisation of gift voucher descriptions, the Gift Voucher is no longer ranked among the top 10 products by weighted average unit price.
+
+<br>
+
+
+##  Operational Cost Summary: Non-Physical Transaction Totals
+A recommendation to treat the following costs as operational adjustments in financial or profitability reporting. So that it won't skew the analysis.
+
+```plaintext
+# Define StockCodes and labels for admin/non-physical items
+admin_fee_codes = {
+    'AMAZONFEE': 'AMAZON FEE',
+    'B': 'Adjust bad debt',
+    'BANK CHARGES': 'Bank Charges',
+    'C2': 'CARRIAGE'
+}
+
+# Filter df_cleaned and aggregate TotalPrice
+admin_fee_totals = df_cleaned[df_cleaned['StockCode'].isin(admin_fee_codes.keys())] \
+    .groupby('StockCode', as_index=False)['TotalPrice'].sum()
+
+# Add readable labels
+admin_fee_totals['Description'] = admin_fee_totals['StockCode'].map(admin_fee_codes)
+
+# Display results
+admin_fee_totals = admin_fee_totals[['StockCode', 'Description', 'TotalPrice']]
+display(admin_fee_totals)
+```
+
+![alt text](image-18.png)
+
+<br>
+
+
+
+
 
 
 
@@ -480,6 +821,9 @@ plt.show()
 
 
 <br>
+
+
+
 
 ## Project Plan
 ### High-Level Steps:
