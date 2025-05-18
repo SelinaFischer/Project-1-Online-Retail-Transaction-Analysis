@@ -203,9 +203,9 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 ```plaintext
 (524878, 9)
 ```
-## Visualisation Steps
+## Data Visualisation Analysis:
 
-### **Step 1: Check distribution of Quantity - the outliers**
+### **1: Check distribution of Quantity - the outliers**
 
 - The horizontal line inside the box represents the median quantity (50%)
 - The box spans the interquartile ragne (IQR) - the middle 50% of the values between 25% and 75%
@@ -240,7 +240,7 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 
 
 
-### **Step 2: Histogram to Complement the above Boxplot**   
+### **2: Histogram to Complement the Boxplot analysis**   
 
    *Histogram to show Quantity Distribution (Zoomed In)*  
   `df_zoom = df_cleaned[df_cleaned['Quantity'] < 100]`  
@@ -261,7 +261,83 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 
 
 
+### **3: Summary Stats Analysis Cover: ** 
+- Total Revenue  
+- Avarage Transaction Value  
+- Unique Customers  
+- Sales Period     
+```plaintext
+(1) This sales period captures the entire date range from the dataset: (01Dec 2010 - 09Dec 2011)  
 
+summary_stats = pd.DataFrame({
+    "Total Revenue (£)": [round(df_cleaned['TotalPrice'].sum(), 2)],
+    "Average Transaction Value (£)": [round(df_cleaned.groupby('InvoiceNo')['TotalPrice'].sum().mean(), 2)],
+    "Unique Customers": [df_cleaned['CustomerID'].nunique()],
+    "Start Date": [df_cleaned['InvoiceDate'].min().strftime("%d %b %Y")],
+    "End Date": [df_cleaned['InvoiceDate'].max().strftime("%d %b %Y")]
+})
+display(summary_stats)
+```
+![alt text](image-4.png)
+
+```plaintext
+(2) This sales period captures 12months  date range from the dataset: (01Dec 2010 - 01Dec 2011)    
+
+filtered_df = df_cleaned[(df_cleaned['InvoiceDate'] >= '2010-12-01') & (df_cleaned['InvoiceDate'] <= '2011-12-01')]
+summary_stats = pd.DataFrame({
+    "Total Revenue (£)": [round(filtered_df['TotalPrice'].sum(), 2)],
+    "Average Transaction Value (£)": [round(filtered_df.groupby('InvoiceNo')['TotalPrice'].sum().mean(), 2)],
+    "Unique Customers": [filtered_df['CustomerID'].nunique()],
+    "Start Date": ["01 Dec 2010"],
+    "End Date": ["01 Dec 2011"]
+})
+display(summary_stats)
+```
+![alt text](image-5.png)
+
+
+
+### **4: Monthly sales trend over time: (01Dec 2010 - 09Dec 2011) ** 
+
+```plaintext
+import matplotlib.dates as mdates
+from matplotlib.ticker import FuncFormatter
+
+# Format y-axis as currency
+def currency_formatter(x, pos):
+    return f'£{int(x):,}'
+
+plt.figure(figsize=(12, 5))
+sns.lineplot(data=monthly_sales, x='Month', y='TotalPrice', marker='o', linewidth=2)
+plt.title('Monthly Sales Trend (01 Dec 2010 - 09 Dec 2011)')
+plt.xlabel('Month')
+plt.ylabel('Total Sales (£)')
+plt.ylim(bottom=0)
+plt.gca().yaxis.set_major_formatter(FuncFormatter(currency_formatter))
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b-%Y'))
+plt.show()
+```
+![alt text](image-9.png)
+
+### Monthly Sales Trend Interpretation:   
+- **Dec 2010**: Strong baseline sales driven by seasonal holiday shopping
+- **Jan–Feb 2011**: Typical Q1 slump, consistent with post-holiday spending declines
+- **Mar–Aug 2011** shows steady performance with minor fluctuations
+- **Sep–Nov 2011**: Sales increased significantly, peaking in **November**, potentially due to Q4 holiday campaigns or Black Friday sales. Indicates an opportunity to run seasonal campaigns and stock top-performing items
+- **Dec 2011**: Noticeable drop similar to December 2010, showing a consistent **post-holiday pattern**, validating a cyclical holiday trend
+
+### Strategic Implications:
+
+| Observation | Suggested Action |
+| ----------- | ----------- |
+| Peak in November | Launch **holiday promotions earlier** to maximise November-December sales |
+| Q1 dip | Use **New Year offers or flash sales** to boost slow months demand|
+| Mid-year Consistent growth | MMaintain **steady promotions** and test campaigns to attract new customers|
+| December drop| Plan **post-November re-engagement** or clearance strategies to extend peak period|  
 
 
 
