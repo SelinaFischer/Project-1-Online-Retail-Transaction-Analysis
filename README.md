@@ -1114,6 +1114,11 @@ This strategy recommends defending the UK’s stronghold, unlocking global reven
 
 
 
+## Reflection
+
+This project deepened my understanding of how to transform raw retail data into actionable business insights. I gained more practical experience using Matplotlib, Seaborn, and Plotly to tell clear visual stories. I truly enjoyed the process and only wish I had more time to polish and expand on the work even further.
+
+
 ## Credits  
 - Data source: https://www.kaggle.com/datasets/abhishekrp1517/online-retail-transactions-dataset 
 - Visual styles: Seaborn, Plotly, Matplotlib documentation  
