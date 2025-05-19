@@ -8,7 +8,7 @@
 
 ## Project Overview
 
-This project explores historical transaction data from an online UK-based retail company. The objective is to derive actionable business insights from customer purchasing behavior, sales trends, and product performance. The project applies data analytics and visualization techniques to support strategic decision-making.
+This project explores historical transaction data from an online retail company. The objective is to derive actionable business insights from customer purchasing behaviour, sales trends, and product performance. The project applies data analytics and visualisation techniques to support strategic decision-making.
 
 
 
@@ -18,9 +18,8 @@ This project explores historical transaction data from an online UK-based retail
 1. Identify top-performing products globally and in the UK  
 2. Understand monthly and daily sales trends across regions  
 3. Segment customers for targeted marketing  
-4. Detect pricing strategies and bulk buying behavior  
-5. Reduce reliance on non-physical (admin) revenue  
-6. Communicate insights through an interactive dashboard for different stakeholders
+4. Detect pricing strategies and bulk buying behaviour  
+5. Communicate insights through an interactive dashboard for different stakeholders
 
 
 <br>
