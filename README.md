@@ -1087,7 +1087,7 @@ RFM analysis reveals the following customer distribution:
 
 ---
 
-## 7. Reduce Dependency on Operational Transaction Revenue  
+## 7. Isolate Operational Transaction Revenue  
 - Non-product revenue sources like "Amazon Fee", "Adjust Bad Debt", "Bank Charges", and "Carriage" currently contribute significantly to total revenue.  
 
 **Action Plan:**  
@@ -1107,7 +1107,7 @@ RFM analysis reveals the following customer distribution:
 ---
 
 ## Conclusion  
-This strategy recommends defending the UK’s stronghold, unlocking global revenue potential, strategically pricing and bundling products, and reactivating customer segments based on RFM segmentation. By reducing operational fee dependency, leveraging bulk buying behaviour, and focusing on product-based growth, the business can drive sustainable performance across all customer segments.
+This strategy recommends defending the UK’s stronghold, unlocking global revenue potential, strategically pricing and bundling products, and reactivating customer segments based on RFM segmentation. Operational fees (e.g. postage, bad debts) should be excluded from sales revenue, as including them can distort performance figures. By leveraging bulk buying behaviour and focusing on product-based growth, the business can drive sustainable performance across all customer segments.
 
 
 
