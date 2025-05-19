@@ -1024,6 +1024,8 @@ Our data-driven retail analysis reveals that the UK is the core revenue engine, 
 - The UK accounts for approximately 90%+ of sales for most top products (e.g., Party Bunting, White Heart T-Light Holder).  
 - Daily UK sales trend shows consistent demand with sharp seasonal spikes in Q4.  
 
+<br>
+
 **Action Plan:**  
 - Launch seasonal campaigns around peak months (e.g., October to December).  
 - Offer product bundles for bestsellers such as Paper Craft and T-Light Holders.  
@@ -1035,6 +1037,8 @@ Our data-driven retail analysis reveals that the UK is the core revenue engine, 
 - Global markets such as the Netherlands, France, and EIRE show promising but underutilised sales trends.  
 - The UK dominates sales (e.g., 100% for Paper Craft), indicating a potential over-reliance.  
 
+<br>
+
 **Action Plan:**  
 - Run geo-targeted campaigns in selected EU markets, using top-performing UK products.  
 - Launch localised promotions that mirror UK product popularity.  
@@ -1045,6 +1049,8 @@ Our data-driven retail analysis reveals that the UK is the core revenue engine, 
 ## 3. Product Strategy: Prioritise High-Volume, High-Potential Items  
 - RABBIT NIGHT LIGHT sold over 15,000 units in the UK but did not appear in the top 10 revenue chart, indicating it is a volume-driven product with a lower price point.  
 
+<br>
+
 **Action Plan:**  
 - Introduce value packs or multi-buy bundles for high-volume products.  
 - Position low-ticket, high-frequency products in upsell or cross-sell funnels.  
@@ -1054,6 +1060,8 @@ Our data-driven retail analysis reveals that the UK is the core revenue engine, 
 
 ## 4. Premium Product Positioning and Pricing Intelligence  
 - Premium items such as Picnic Baskets (£649.50) and Kitchen Cabinets are priced high and contribute through low-frequency, high-margin sales.  
+
+<br>
 
 **Action Plan:**  
 - Launch limited-edition or artisan product collections to reinforce exclusivity.  
@@ -1069,6 +1077,8 @@ RFM analysis reveals the following customer distribution:
 - Moderate: 48.22%  
 - At-Risk: 18.19%  
 
+<br>
+
 **Action Plan:**  
 - Deliver targeted email and SMS campaigns to retain “Less Recent” and “At-Risk” customers.  
 - Offer VIP rewards or early-access incentives for “High-Value” customers.  
@@ -1080,6 +1090,8 @@ RFM analysis reveals the following customer distribution:
 ## 6. Identify and Leverage Wholesale and Bulk Buyer Opportunities  
 - The dataset shows a **large spread in quantity and unit price** — some sales involve extremely high quantities (e.g., max quantity of 80,995 units and max price of £13,541), indicating the presence of **wholesale or bulk purchase behaviour**.
 
+<br>
+
 **Action Plan:**  
 - Segment bulk buyers and target them with dedicated **wholesale pricing or tiered discounting**.  
 - Create a **“trade account” registration** path to serve business buyers.  
@@ -1089,6 +1101,8 @@ RFM analysis reveals the following customer distribution:
 
 ## 7. Isolate Operational Transaction Revenue  
 - Non-product revenue sources like "Amazon Fee", "Adjust Bad Debt", "Bank Charges", and "Carriage" currently contribute significantly to total revenue.  
+
+<br>
 
 **Action Plan:**  
 - Conduct an operational audit to isolate and reduce reliance on admin revenue.  
@@ -1105,16 +1119,22 @@ RFM analysis reveals the following customer distribution:
 - Ratio of bulk vs. individual purchases
 
 ---
+<br>
 
 ## Conclusion  
 This strategy recommends defending the UK’s stronghold, unlocking global revenue potential, strategically pricing and bundling products, and reactivating customer segments based on RFM segmentation. Operational fees (e.g. postage, bad debts) should be excluded from sales revenue, as including them can distort performance figures. By leveraging bulk buying behaviour and focusing on product-based growth, the business can drive sustainable performance across all customer segments.
 
+---
 
+<br>
 
 ## Reflection
 
 This project deepened my understanding of how to transform raw retail data into actionable business insights. I gained more practical experience using Matplotlib, Seaborn, and Plotly to tell clear visual stories. I truly enjoyed the process and only wish I had more time to polish and expand on the work even further.
 
+---
+
+<br>
 
 ## Credits  
 - [The Code Institute Learning Management System](https://learn.codeinstitute.net/ci_program/daai_5) modules on pandas and data visualisations with Matplotlib,Seaborn and Plotly
@@ -1125,7 +1145,9 @@ This project deepened my understanding of how to transform raw retail data into 
 - [Markdown guide](https://www.markdownguide.org/cheat-sheet/) was used to format the README.md and markdown cells in the Jupyter notebooks
 - Report structure inspiration: Code Institute project template
 
+---
+<br>
 
 ## Acknowledgements
 
-Special thanks to my amazing tutors — Emma Lamont, Mark Briscoe, John Rearden, and Niel McEwan — at Code Institute. Thanks also to my fellow cohort students for working together and sharing helpful resources.
+Special thanks to my amazing tutors — Emma Lamont, Mark Briscoe, John Rearden, and Niel McEwan at Code Institute. Thanks also to my fellow cohort students for working together and sharing helpful resources.
