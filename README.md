@@ -313,37 +313,125 @@ display(summary_stats)
 
 ## 4: Trend Analysis: ( 1Dec 2010 - 9Dec 2011 ) 
 
-*I include the sales period from 02-09Dec 2011 so that I am able to observe the trend behaviour after November month.*
+**4.1. Top 10 Countries by Revenue** 
+This chart shows that UK is the main country generating the most revenue for the business. So UK market will be my focus for the online analysis
+
+```plaintext
+import plotly.graph_objects as go
+
+# Get top 10 countries by total sales
+top_countries = (
+    monthly_sales.groupby('Country')['TotalPrice']
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+    .index
+)
+
+# Filter data
+top_sales = monthly_sales[monthly_sales['Country'].isin(top_countries)]
+
+# Create figure
+fig = go.Figure()
+
+# Plot each country
+for country in top_countries:
+    data = top_sales[top_sales['Country'] == country]
+    
+    fig.add_trace(go.Scatter(
+        x=data['YearMonth'],
+        y=data['TotalPrice'],
+        mode='lines',
+        name=country,
+        line=dict(
+            width=4 if country == 'United Kingdom' else 2
+        )
+    ))
+
+# Update layout to match original style
+fig.update_layout(
+    title='Monthly Total Sales by Top 10 Countries',
+    xaxis_title='Date',
+    yaxis_title='Total Sales (£)',
+    template='plotly_white',
+    legend_title='Country'
+)
+
+fig.show()
+```
+
+<br>
+
+![plotly interactive line chart](image-25.png)
+<br>
+
+**4.2 UK Online Market Analysis**
+
+**Daily Sales**
+```plaintext
+import plotly.express as px
+
+# Filter for UK
+df_uk = df_cleaned[df_cleaned['Country'] == 'United Kingdom']
+
+# Daily Sales
+daily_sales_uk = df_uk.groupby(df_uk['InvoiceDate'].dt.date)['TotalPrice'].sum().reset_index()
+daily_sales_uk.columns = ['Date', 'TotalSales']
+
+fig_daily = px.line(
+    daily_sales_uk,
+    x='Date',
+    y='TotalSales',
+    title='UK Market - Daily Sales Trend',
+    labels={'Date': 'Date', 'TotalSales': 'Total Sales (£)'},
+    template='plotly_white'
+)
+
+fig_daily.update_traces(line=dict(color='royalblue', width=2))
+fig_daily.update_layout(yaxis_tickprefix='£')
+
+fig_daily.show()
+```
+<br>
+
+![UK Daily Sales Trend see VS Code for Interactive chart](image-27.png)
+
+<br>
+
+
+**UK Monthly Sales Trend**
 
 ```plaintext
 import matplotlib.dates as mdates
 from matplotlib.ticker import FuncFormatter
+import plotly.express as px
 
-# Format y-axis as currency
-def currency_formatter(x, pos):
-    return f'£{int(x):,}'
+fig_monthly = px.line(
+    monthly_sales_uk,
+    x='Date',
+    y='TotalSales',
+    title='UK Market - Monthly Sales Trend',
+    labels={'Date': 'Month', 'TotalSales': 'Total Sales (£)'},
+    template='plotly_white'
+)
 
-plt.figure(figsize=(12, 5))
-sns.lineplot(data=monthly_sales, x='Month', y='TotalPrice', marker='o', linewidth=2)
-plt.title('Monthly Sales Trend (01 Dec 2010 - 09 Dec 2011)')
-plt.xlabel('Month')
-plt.ylabel('Total Sales (£)')
-plt.ylim(bottom=0)
-plt.gca().yaxis.set_major_formatter(FuncFormatter(currency_formatter))
-plt.xticks(rotation=45)
-plt.grid(True)
-plt.tight_layout()
-plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b-%Y'))
-plt.show()
+fig_monthly.update_traces(line=dict(color='darkorange', width=3))
+
+fig_monthly.update_layout(
+    yaxis_tickprefix='£',
+    yaxis_tickformat=',',  # Format numbers with comma as thousands separator
+    hoverlabel=dict(namelength=-1)  #shows full label in tooltip
+)
+
+fig_monthly.show()
 ```
 <br>
 
-![alt text](image-9.png)
+![UK Monthly interactive sales trend](image-28.png)
 
 <br>
 
-### 4.1. Monthly Sales Trend Interpretation
+### 4.3. Monthly Sales Trend Interpretation
 
 - **Dec 2010**: Strong baseline sales driven by seasonal holiday shopping
 - **Jan–Feb 2011**: Typical Q1 slump, consistent with post-holiday spending declines
@@ -353,7 +441,7 @@ plt.show()
 
 <br>
 
-### 4.2. Strategic Implications
+### 4.4. Strategic Implications
 
 | Observation | Suggested Action |
 | ----------- | ----------- |
@@ -488,64 +576,208 @@ plt.show()
 
 ## 6: Product Analysis
 
-### 6.1. Top 10 Products by Revenue (total sales): (1Dec 2010 - 9Dec 2011)
+### 6.1. Top 10 Products by Revenue (Total Sales)
 
 **Calculated by Sales Volumn * UnitPrice**  
+
+*Global Sales*
+```plaintext
+
+#exclluded non_product keysords to prevent them from skewing the trend
+
+import plotly.express as px
+
+# Step 1: Exclude non-physical products
+non_product_keywords = ['manual', 'adjust', 'postage', 'carriage', 'fee', 'bank charges']
+df_products_only = df_cleaned[~df_cleaned['Description'].str.lower().str.contains('|'.join(non_product_keywords), na=False)].copy()
+
+# Step 2: Clean encoding issues
+df_products_only['Description'] = df_products_only['Description'].str.replace('Â', '', regex=False)
+
+# Step 3: Group and get top 10 by total sales (global, not UK-only)
+top_total_sales_products = (
+    df_products_only.groupby('Description')['TotalPrice']
+    .sum()
+    .nlargest(10)
+    .reset_index()
+)
+
+# Step 4: Plot
+fig = px.bar(
+    top_total_sales_products,
+    x='TotalPrice',
+    y='Description',
+    orientation='h',
+    title='Top 10 Products by Total Sales Value (Global)',
+    labels={'TotalPrice': 'Total Sales (£)', 'Description': 'Product Description'},
+    template='plotly_white',
+    color='TotalPrice',
+    color_continuous_scale='viridis',
+    text=top_total_sales_products['TotalPrice'].apply(lambda x: f'£{x:,.0f}')
+)
+
+fig.update_traces(textposition='inside')
+fig.update_layout(
+    yaxis={'categoryorder': 'total ascending'},
+    xaxis_tickprefix='£',
+    xaxis_tickformat=',',
+    hoverlabel=dict(namelength=-1),
+    coloraxis_showscale=False
+)
+
+fig.show()
+```
+<br>
+
+![Global Sales Top10 Products by Revenue](image-29.png)
+
+<br>
+
+**UK Top 10 Products by Revenue**
+
+
 ```plaintext
 # exclude all the non product - manual, adjut, postage, carriage, fee, bank charges
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import seaborn as sns
+import plotly.express as px
 
-# Data prep
+# Step 1: Exclude non-physical products
 non_product_keywords = ['manual', 'adjust', 'postage', 'carriage', 'fee', 'bank charges']
 df_products_only = df_cleaned[~df_cleaned['Description'].str.lower().str.contains('|'.join(non_product_keywords), na=False)].copy()
-df_products_only.loc[:, 'Description'] = df_products_only['Description'].str.replace('Â', '', regex=False)
 
-top_total_sales_products = df_products_only.groupby('Description')['TotalPrice'].sum().nlargest(10).reset_index()
+# Step 2: Filter to UK only
+df_uk_products_only = df_products_only[df_products_only['Country'] == 'United Kingdom'].copy()
 
-# Plot
-plt.figure(figsize=(10, 6))
-ax = sns.barplot(
-    data=top_total_sales_products,
-    x='TotalPrice',
-    y='Description',
-    hue='Description',
-    palette='viridis',
-    dodge=False,
-    legend=False
+# Step 3: Clean description text
+df_uk_products_only['Description'] = df_uk_products_only['Description'].str.replace('Â', '', regex=False)
+
+# Step 4: Aggregate top 10 UK products by total sales
+top_uk_products = (
+    df_uk_products_only.groupby('Description')['TotalPrice']
+    .sum()
+    .nlargest(10)
+    .reset_index()
 )
 
-# Format x-axis ticks with commas
-formatter = FuncFormatter(lambda x, _: f'{x:,.0f}')
-ax.xaxis.set_major_formatter(formatter)
+fig = px.bar(
+    top_uk_products,
+    x='TotalPrice',
+    y='Description',
+    orientation='h',
+    title='Top 10 UK Products by Total Sales (£)',
+    labels={'TotalPrice': 'Total Sales (£)', 'Description': 'Product Description'},
+    template='plotly_white',
+    color='TotalPrice',
+    color_continuous_scale='sunset',  # ← Use a different gradient from viridis
+    text=top_uk_products['TotalPrice'].apply(lambda x: f'£{x:,.0f}')
+)
 
-# Add value labels inside the bars
-for i, (value, name) in enumerate(zip(top_total_sales_products['TotalPrice'], top_total_sales_products['Description'])):
-    ax.text(
-        value - (value * 0.01),  # slight left offset from bar end
-        i,  # y-position based on index
-        f'£{value:,.0f}',
-        va='center',
-        ha='right',  # align text to the right so it stays inside
-        fontsize=9,
-        color='white',  # change to 'black' if bars are light-coloured
-        fontweight='bold'
-    )
+fig.update_traces(textposition='inside')
 
-plt.title('Top 10 Products by Total Sales Value')
-plt.xlabel('Total Sales (£)')
-plt.ylabel('Product Description')
-plt.grid(axis='x', linestyle='--', alpha=0.6)
-plt.tight_layout()
-plt.show()
+fig.update_layout(
+    yaxis={'categoryorder': 'total ascending'},
+    xaxis_tickprefix='£',
+    xaxis_tickformat=',',
+    hoverlabel=dict(namelength=-1),
+    coloraxis_showscale=False  # Optional: hides the color bar
+)
+
+fig.show()
 ```
 <br>
 
-![alt text](image-15.png)
+![UK Top10 procucts by revenue interactive chart](image-30.png)
 
 <br>
+
+**Top 10 Products by Total Sales: Global vs UK (with UK % Share)**
+
+| Rank | Product Name                          | Global Total (£) | UK Total (£) | UK % of Global |
+|------|----------------------------------------|------------------|--------------|----------------|
+| 1    | REGENCY CAKESTAND 3 TIER              | £174,157         | £141,996     | 81.56%         |
+| 2    | PAPER CRAFT , LITTLE BIRDIE           | £168,470         | £168,470     | 100.00%        |
+| 3    | WHITE HANGING HEART T-LIGHT HOLDER    | £106,237         | £100,445     | 94.54%         |
+| 4    | PARTY BUNTING                         | £99,445          | £93,599      | 94.12%         |
+| 5    | JUMBO BAG RED RETROSPOT               | £94,160          | £86,291      | 91.65%         |
+| 6    | MEDIUM CERAMIC TOP STORAGE JAR        | £81,701          | £80,576      | 98.62%         |
+| 7    | RABBIT NIGHT LIGHT                    | £66,870          | £37993   	 | 56.82%         |
+| 8    | PAPER CHAIN KIT 50'S CHRISTMAS        | £64,876          | £62,684      | 96.62%         |
+| 9    | ASSORTED COLOUR BIRD ORNAMENT         | £58,928          | £54,589      | 92.62%         |
+| 10   | CHILLI LIGHTS                         | £54,096          | £53,315      | 98.55%         |
+| 11   | PICNIC BASKET WICKER 60 PIECES        | —                | £39,620      | 100.00%        |
+
+
+<br>
+
+**Global vs UK Top 10 Products Comparision Chart**
+
+``` plaintext
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# using data from both global and UK top10 products
+data = {
+    'Product Name': [
+        'REGENCY CAKESTAND 3 TIER',
+        'PAPER CRAFT , LITTLE BIRDIE',
+        'WHITE HANGING HEART T-LIGHT HOLDER',
+        'PARTY BUNTING',
+        'JUMBO BAG RED RETROSPOT',
+        'MEDIUM CERAMIC TOP STORAGE JAR',
+        'RABBIT NIGHT LIGHT',
+        "PAPER CHAIN KIT 50'S CHRISTMAS",
+        'ASSORTED COLOUR BIRD ORNAMENT',
+        'CHILLI LIGHTS',
+        'PICNIC BASKET WICKER 60 PIECES'
+    ],
+    'Global Total (£)': [
+        174157, 168470, 106237, 99445, 94160, 81701,
+        66870, 64876, 58928, 54096, 0  # Global = 0 for UK-only item
+    ],
+    'UK Total (£)': [
+        141996, 168470, 100445, 93599, 86291, 80576,
+        37993, 62684, 54589, 53315, 39620
+    ]
+}
+
+df = pd.DataFrame(data)
+
+# Plot
+fig, ax = plt.subplots(figsize=(10, 6))
+
+bar_width = 0.35
+index = range(len(df))
+
+# Bars for global and UK
+ax.barh(index, df['Global Total (£)'], bar_width, label='Global', color='lightblue')
+ax.barh([i + bar_width for i in index], df['UK Total (£)'], bar_width, label='UK', color='darkblue')
+
+# Y-axis labels
+ax.set_yticks([i + bar_width / 2 for i in index])
+ax.set_yticklabels(df['Product Name'])
+
+# Labels and legend
+ax.set_xlabel('Total Sales (£)')
+ax.set_title('Global vs UK Total Sales by Product')
+ax.legend()
+
+# Format tick labels with commas and pound symbol
+ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'£{x:,.0f}'))
+
+plt.tight_layout()
+plt.gca().invert_yaxis()  # Highest value at top
+plt.show()
+```
+
+<br>
+
+![global vs uk top10 products by revenue](image-33.png)
+<br>
+
+
 
 ### 6.2.Top 10 Products by Average Unit Price
 In the following analysis, notice that gift voucher has £100 value but the average price is £83.33
@@ -778,6 +1010,101 @@ plt.show()
 ### Following the normalisation of gift voucher descriptions, the Gift Voucher is no longer ranked among the top 10 products by weighted average unit price.
 
 <br>
+
+### 6.3. Top 10 Most Popular Products by Quantity Sold using matplotlib
+
+```plaintext
+ Product Analysis: Top 10 Products by Quantity Sold (Most Popular)
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.ticker import FuncFormatter
+
+# Calculate total quantity sold by product
+top_quantity_products = (
+    df_products_only.groupby('Description')['Quantity']
+    .sum()
+    .nlargest(10)
+    .reset_index()
+)
+
+# Plot
+plt.figure(figsize=(10, 6))
+ax = sns.barplot(
+    data=top_quantity_products,
+    x='Quantity',
+    y='Description',
+    hue='Description',
+    palette='crest',
+    dodge=False,
+    legend=False
+)
+
+# Format value labels
+for i, (value, name) in enumerate(zip(top_quantity_products['Quantity'], top_quantity_products['Description'])):
+    ax.text(
+        value - (value * 0.01),
+        i,
+        f'{value:,.0f}',
+        va='center',
+        ha='right',
+        fontsize=9,
+        color='white',
+        fontweight='bold'
+    )
+
+plt.title('Top 10 Most Popular Products by Quantity Sold')
+plt.xlabel('Total Units Sold')
+plt.ylabel('Product Description')
+plt.grid(axis='x', linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
+```
+
+<br>
+
+![alt text](image-22.png)
+
+<br>
+
+### 6.4. Top 10 Most Popular Products by Quantity Sold Interactive Visualisation using Plotly
+
+```plaintext
+
+import plotly.express as px
+
+# Prepare data for interactive chart (top 10 most popular by quantity sold)
+top_quantity_products_plotly = (
+    df_products_only.groupby('Description')['Quantity']
+    .sum()
+    .nlargest(10)
+    .reset_index()
+)
+
+fig = px.bar(
+    top_quantity_products_plotly,
+    x='Quantity',
+    y='Description',
+    orientation='h',
+    text='Quantity',
+    title='Top 10 Most Popular Products by Quantity Sold (Interactive)',
+    labels={'Quantity': 'Total Units Sold', 'Description': 'Product'},
+    color='Quantity',
+    color_continuous_scale='Blues'
+)
+
+fig.update_traces(texttemplate='%{text}', textposition='inside')
+fig.update_layout(yaxis=dict(autorange='reversed'))
+fig.show()
+```
+
+### Click the link [Top 10 most popular Products by quantity sold here](http://127.0.0.1:58754/)
+
+<br>
+
+![alt text](image-23.png)
+
+<br>
+
 
 
 ##  Operational Cost Summary: Non-Physical Transaction Totals
