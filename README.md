@@ -4,14 +4,14 @@
 
 
 
-
+<br>
 
 ## Project Overview
 
 This project explores historical transaction data from an online retail company. The objective is to derive actionable business insights from customer purchasing behaviour, sales trends, and product performance. The project applies data analytics and visualisation techniques to support strategic decision-making.
 
 
-
+<br>
 
 ## Business Requirements
 
@@ -19,7 +19,7 @@ This project explores historical transaction data from an online retail company.
 2. Understand monthly and daily sales trends across regions  
 3. Segment customers for targeted marketing  
 4. Detect pricing strategies and bulk buying behaviour  
-5. Communicate insights through an interactive dashboard for different stakeholders
+5. Communicate insights through an interactive dashboard for different audiences
 
 
 <br>
@@ -36,10 +36,9 @@ This project explores historical transaction data from an online retail company.
    → Validated using RFM segmentation 
 
 
+<br>
 
 ## Project Plan
-
-<BR>
 
 ### High-Level Steps  
 - Data loading and initial inspection  
