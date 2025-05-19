@@ -1139,11 +1139,10 @@ This project deepened my understanding of how to transform raw retail data into 
 ## Credits  
 - [The Code Institute Learning Management System](https://learn.codeinstitute.net/ci_program/daai_5) modules on pandas and data visualisations with Matplotlib, Seaborn and Plotly
 - [Data source from Kaggle](https://www.kaggle.com/datasets/abhishekrp1517/online-retail-transactions-dataset) 
-- Visual styles: Seaborn, Plotly, Matplotlib documentation  
 - ChatGPT for Code snippets and trouble shoot
 - Grok (Open AI) for trouble shoot    
 - [Markdown guide](https://www.markdownguide.org/cheat-sheet/) was used to format the README.md and markdown cells in the Jupyter notebooks
-- Report structure inspiration: Code Institute project template
+- Report structure guided by Code Institute project template
 
 ---
 <br>
