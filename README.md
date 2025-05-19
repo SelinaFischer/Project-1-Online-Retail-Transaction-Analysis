@@ -18,7 +18,7 @@ This project explores historical transaction data from an online retail company.
 1. Identify top-performing products globally and in the UK  
 2. Understand monthly and daily sales trends across regions  
 3. Segment customers for targeted marketing  
-4. Detect pricing strategies and bulk buying behaviour  
+4. Uncover pricing strategies and bulk buying behaviour  
 5. Communicate insights through an interactive dashboard for different audiences
 
 
@@ -92,25 +92,25 @@ This mixed-method approach enabled both technical clarity and business usability
 ### Methods  
 - GroupBy aggregation  
 - RFM segmentation  
-- Value counts and binning  
+- Value counts   
 - Text-based filtering (e.g., `str.contains`)  
-- Visualization using Plotly, Seaborn, and Matplotlib  
+- Visualisation using Plotly, Seaborn, and Matplotlib  
 
 ### Limitations and Alternatives  
 - **No product categories**: Used product descriptions instead  
 - **Missing CustomerIDs (~25%)**: Excluded those rows from segmentation  
 - **No cost/margin data**: Couldn’t perform profitability analysis  
-- **Alternative**: Could use unsupervised clustering if product metadata existed  
+
 
 ### Structuring the Analysis  
 - Feature engineering: `TotalPrice`, `YearMonth`, `RFM_Score`  
 - Cleaning: Removed nulls, duplicates, and non-product rows  
-- Filtering logic to isolate physical product lines  
+- Filtering logic to isolate physical product from non product lines  
 
 
 ## Ethical Considerations  
-- **GDPR**: No personal data; CustomerID anonymized  
-- **Resolution**: Treated customer data with aggregation only; no individual tracing
+- **GDPR**: No personal data; CustomerID anonymised  
+
 
 <br>
 
@@ -449,7 +449,7 @@ display(summary_stats)
 
 <br>
 
-## 4: Trend Analysis: ( 1Dec 2010 - 9Dec 2011 ) 
+## 4: Trend Analysis: 
 
 **4.1. Top 10 Countries by Revenue** 
 This chart shows that UK is the main country generating the most revenue for the business. So UK market will be my focus for the online analysis
@@ -1137,7 +1137,7 @@ This project deepened my understanding of how to transform raw retail data into 
 <br>
 
 ## Credits  
-- [The Code Institute Learning Management System](https://learn.codeinstitute.net/ci_program/daai_5) modules on pandas and data visualisations with Matplotlib,Seaborn and Plotly
+- [The Code Institute Learning Management System](https://learn.codeinstitute.net/ci_program/daai_5) modules on pandas and data visualisations with Matplotlib, Seaborn and Plotly
 - [Data source from Kaggle](https://www.kaggle.com/datasets/abhishekrp1517/online-retail-transactions-dataset) 
 - Visual styles: Seaborn, Plotly, Matplotlib documentation  
 - ChatGPT for Code snippets and trouble shoot
