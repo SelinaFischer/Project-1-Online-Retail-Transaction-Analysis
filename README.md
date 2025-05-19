@@ -6,43 +6,122 @@
 
 ## Project Overview
 
-This project analyses customer transactions from an online retail dataset to uncover purchasing patterns, understand customer behaviour,  customer segments, and product performance. 
+This project explores historical transaction data from an online UK-based retail company. The objective is to derive actionable business insights from customer purchasing behavior, sales trends, and product performance. The project applies data analytics and visualization techniques to support strategic decision-making.
 
-The goal is to generate actionable insights that help optimise pricing, product bundling, and marketing strategies.
-
-Deliverables include clear documentation, structured code, insightful visualisations using Matplotlib, Seaborn and Plotly, and a well-managed workflow using GitHub and Kanban board for version control and task tracking.
 
 
 
 ## Business Requirements
-- Identify high-value and at-risk customers
-- Discover popular and premium-priced products
-- Detect seasonal trends and sales patterns
-- Propose pricing, promotion, and customer reactivation strategies
+
+1. Identify top-performing products globally and in the UK  
+2. Understand monthly and daily sales trends across regions  
+3. Segment customers for targeted marketing  
+4. Detect pricing strategies and bulk buying behavior  
+5. Reduce reliance on non-physical (admin) revenue  
+6. Communicate insights through an interactive dashboard for different stakeholders
 
 
 <br>
 
+## Hypothesis and How to Validate
+
+1. **The UK is the primary revenue driver**  
+   → Validated by grouping and comparing total revenue by country 
+
+2. **High-volume products are not necessarily the highest revenue drivers**  
+   → Validated by comparing quantity vs. revenue per product  
+
+3. **A small segment of customers drives a large share of revenue**  
+   → Validated using RFM segmentation 
 
 
 
 ## Project Plan
 
 <BR>
-### High-Level Steps:
-1. Data extraction and loading
-2. Cleaning and transformation
-3. Exploratory analysis and visualisation
-4. Recency, Frequency, Monetary (RFM) segmentation
-   - Recency:  how recently a customer made a purchase
-   - Frequency: how often they purchase
-   - Monetary: how much money they spend
-5. Strategic recommendations
-6. Reflection and documentation
+
+### High-Level Steps  
+- Data loading and initial inspection  
+- Data cleaning: handled nulls, removed returns and non-physical products  
+- Feature engineering: created `TotalPrice`, `YearMonth`, and RFM metrics  
+- Exploratory Data Analysis (EDA) using Matplotlib, Seaborn, and Plotly  
+- Customer segmentation and product analysis  
+- Dashboard preparation using Plotly  
+
+<br>
+
+### Data Management Process  
+- **Collection**: Imported the raw CSV dataset into a Pandas DataFrame  
+- **Processing**: Cleaned data, filtered out non-physical transactions, and standardized product descriptions  
+- **Analysis**: Structured data by aggregating revenue, quantity, and dates; calculated RFM metrics  
+- **Interpretation**: Used visual analytics to link insights directly to business questions  
+
+<br>
+
+### Required Visualisation Libraries  
+The methodology specifically incorporated all three required libraries:
+
+- **Matplotlib**: Used for static visuals such as RFM segmentation charts and formatted bar plots  
+- **Seaborn**: Used for aesthetically rich visuals like distribution plots, comparative bar charts, and categorical analysis  
+- **Plotly**: Used for interactive dashboards including time series trends, hover-enabled product charts, and customer segmentation overviews  
+
+This mixed-method approach enabled both technical clarity and business usability
+
+### Methodology Rationale  
+- Used descriptive analytics and customer segmentation due to the transactional nature of the dataset  
+- Focused on visual storytelling for communicating results  
+- Selected Plotly and Seaborn for flexible, high-quality plotting
+
+<br>
+
+## The Rationale to Map Business Requirements to Data Visualisations
+
+| Business Requirement                       | Visualisation Used                          |
+|-------------------------------------------|---------------------------------------------|
+| UK vs Global Sales Trends                 | Monthly and daily line charts               |
+| Top-Selling Products                      | Bar charts (global and UK separately)       |
+| Product Value vs Volume                   | Comparison table + unit price chart         |
+| Customer Segmentation                     | RFM segmentation chart and summary table    |
+| Pricing Insights                          | Bar chart of average unit prices            |
+| Admin Fee Revenue Breakdown               | Table of non-physical transactions          |
+
+<br>
+
+## Analysis Techniques Used  
+
+### Methods  
+- GroupBy aggregation  
+- RFM segmentation  
+- Value counts and binning  
+- Text-based filtering (e.g., `str.contains`)  
+- Visualization using Plotly, Seaborn, and Matplotlib  
+
+### Limitations and Alternatives  
+- **No product categories**: Used product descriptions instead  
+- **Missing CustomerIDs (~25%)**: Excluded those rows from segmentation  
+- **No cost/margin data**: Couldn’t perform profitability analysis  
+- **Alternative**: Could use unsupervised clustering if product metadata existed  
+
+### Structuring the Analysis  
+- Feature engineering: `TotalPrice`, `YearMonth`, `RFM_Score`  
+- Cleaning: Removed nulls, duplicates, and non-product rows  
+- Filtering logic to isolate physical product lines  
 
 
+## Ethical Considerations  
+- **GDPR**: No personal data; CustomerID anonymized  
+- **Resolution**: Treated customer data with aggregation only; no individual tracing
+
+<br>
 
 ## Dataset Content - ETL PROCESS
+
+- Source: Online_Retail.csv
+- Period: December 2010 to December 2011
+- Fields: InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, Country
+- Volume: 524,878 records across 37 countries
+- Format: CSV, transactional structure with each row representing a line item in an invoice
+
 
 Source: [Kaggle – Online Retail Transaction Dataset](https://www.kaggle.com/datasets/abhishekrp1517/online-retail-transactions-dataset)
 
@@ -231,7 +310,41 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 ```plaintext
 (524878, 9)
 ```
+
 ## Data Visualisation Analysis
+
+
+
+### Dashboard Pages and Widgets  
+1. **Sales Overview**  
+   - Monthly sales by country (line chart)  
+   - Daily UK sales trend (line chart)  
+
+2. **Product Insights**  
+   - Top 10 products by total revenue (bar chart)  
+   - Avg. unit price per product (bar chart)  
+
+3. **Customer Segmentation**  
+   - RFM bar chart (segmented by group)  
+   - Customer segment summary table  
+
+4. **Admin Revenue Breakdown**  
+   - Table of non-physical product revenue  
+
+
+## Main Data Analysis Libraries  
+
+| Library         | Purpose                                        | Example Use                                   |
+|----------------|------------------------------------------------|-----------------------------------------------|
+| `pandas`        | Data cleaning and manipulation                 | `groupby()`, `merge()`, `loc[]`, `dropna()`    |
+| `numpy`         | Numeric logic and calculations                 | `np.where`, `percentile`                      |
+| `plotly.express`| Interactive visualizations                     | Line and bar charts                           |
+| `seaborn`       | Statistical plots                              | Barplots and categorical data visualization   |
+| `matplotlib`    | Static plotting                                | Used for comparison charts                    |
+| `datetime`      | Time feature extraction                        | Monthly/yearly aggregation                    |
+
+<br>
+
 
 ### 1: Check distribution of Quantity - the outliers
 
@@ -998,3 +1111,12 @@ RFM analysis reveals the following customer distribution:
 
 ## Conclusion  
 This strategy recommends defending the UK’s stronghold, unlocking global revenue potential, strategically pricing and bundling products, and reactivating customer segments based on RFM segmentation. By reducing operational fee dependency, leveraging bulk buying behaviour, and focusing on product-based growth, the business can drive sustainable performance across all customer segments.
+
+
+
+## Credits  
+- Data source: https://www.kaggle.com/datasets/abhishekrp1517/online-retail-transactions-dataset 
+- Visual styles: Seaborn, Plotly, Matplotlib documentation  
+- Code snippets and help: ChatGPT (OpenAI)  
+- RFM segmentation logic: CRM analytics standards  
+- Report structure inspiration: Code Institute project template
