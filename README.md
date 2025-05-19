@@ -114,7 +114,7 @@ This mixed-method approach enabled both technical clarity and business usability
 
 <br>
 
-## Dataset Content - ETL PROCESS
+## Dataset Content - ETL Process
 
 - Source: Online_Retail.csv
 - Period: December 2010 to December 2011
@@ -313,9 +313,6 @@ std	  156.280031	    NaN	                           36.093028	    1482.145530	  
 
 ## Data Visualisation Analysis
 
-
-
-### Dashboard Pages and Widgets  
 1. **Sales Overview**  
    - Monthly sales by country (line chart)  
    - Daily UK sales trend (line chart)  
