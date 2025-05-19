@@ -14,7 +14,35 @@ Deliverables include clear documentation, structured code, insightful visualisat
 
 
 
-## Dataset Content
+## Business Requirements
+- Identify high-value and at-risk customers
+- Discover popular and premium-priced products
+- Detect seasonal trends and sales patterns
+- Propose pricing, promotion, and customer reactivation strategies
+
+
+<br>
+
+
+
+
+## Project Plan
+
+<BR>
+### High-Level Steps:
+1. Data extraction and loading
+2. Cleaning and transformation
+3. Exploratory analysis and visualisation
+4. Recency, Frequency, Monetary (RFM) segmentation
+   - Recency:  how recently a customer made a purchase
+   - Frequency: how often they purchase
+   - Monetary: how much money they spend
+5. Strategic recommendations
+6. Reflection and documentation
+
+
+
+## Dataset Content - ETL PROCESS
 
 Source: [Kaggle – Online Retail Transaction Dataset](https://www.kaggle.com/datasets/abhishekrp1517/online-retail-transactions-dataset)
 
@@ -509,7 +537,7 @@ print("Total Unique Customers:", total_customers)
 | ---------------| --------------| -------------|
 |High-Value Customers| 488| 11.25%|
 |High-Value (Less Recent)| 969| 22.34%
-|Moderate Customers| 2092| 48.22$|
+|Moderate Customers| 2092| 48.22%|
 |At-Risk Customers| 789| 18.19%|
 |**Total Unique Customers**| **4338** 
 
@@ -779,331 +807,68 @@ plt.show()
 
 
 
-### 6.2.Top 10 Products by Average Unit Price
-In the following analysis, notice that gift voucher has £100 value but the average price is £83.33
-```plaintext
-# Get top 10 products by average unit price
-avg_unit_price_products = df_products_only.groupby('Description')['UnitPrice'].mean().nlargest(10).reset_index()
-
-# Bar chart
-plt.figure(figsize=(10, 6))
-ax = sns.barplot(
-    data=avg_unit_price_products,
-    x='UnitPrice',
-    y='Description',
-    hue='Description',        # ensures unique colors
-    palette='mako',
-    dodge=False,
-    legend=False              # disables extra legend
-)
-
-# Format x-axis
-formatter = FuncFormatter(lambda x, _: f'£{x:,.2f}')
-ax.xaxis.set_major_formatter(formatter)
-
-# Add value labels inside bars
-for i, (value, name) in enumerate(zip(avg_unit_price_products['UnitPrice'], avg_unit_price_products['Description'])):
-    ax.text(
-        value - (value * 0.01),
-        i,
-        f'£{value:,.2f}',
-        va='center',
-        ha='right',
-        fontsize=9,
-        color='white',
-        fontweight='bold'
-    )
-
-plt.title('Top 10 Products by Average Unit Price (Filtered)')
-plt.xlabel('Avg Unit Price (£)')
-plt.ylabel('Product Description')
-plt.grid(axis='x', linestyle='--', alpha=0.6)
-plt.tight_layout()
-plt.show()
-```
-<br>
-
-![alt text](image-16.png)
-
-### *Then check and analyse the Gift Voucher sales pattern and got the follwoing result*
-There is only one gift voucher sold at £83.33 and the rest of them are at various values.
-
-`df_products_only[df_products_only['Description'].str.contains("gift voucher", case=False)].groupby('UnitPrice').size()`
-
-```plaintext
-UnitPrice
-8.33     8
-16.67    8
-17.02    1
-25.00    6
-25.53    1
-33.33    2
-34.04    1
-41.67    3
-42.55    1
-83.33    1
-dtype: int64
-```
-
-  **I wanted to make sure I use correct product description for the Gift Voucher, so I used the following code to identify them:**
-
-`df_products_only[df_products_only['Description'].str.contains('gift', case=False, na=False)]['Description'].unique()`
-
-```plaintext
-array(['stars gift tape', 'pack of 6 birdy gift tags',
-       'pack of 6 sweetie gift boxes', 'small stripes chocolate gift bag',
-       'pack of 6 handbag gift boxes', 'pack of 6 pannetone gift boxes',
-       'lilac diamante pen in gift box', 'hearts gift tape',
-       'cakes and bows gift  tape', 'yuletide images gift wrap set',
-       'blue  diamante pen in gift box', 'funky monkey gift bag medium',
-       'pink diamante pen in gift box', 'spaceboy gift wrap',
-       'silver diamante pen in gift box', 'gift bag psychedelic apples',
-       'new england mug w gift box', 'vintage caravan gift wrap',
-       'small polkadot chocolate gift bag',
-       'green  diamante pen in gift box',
-       'large stripes chocolate gift bag', 'pink paisley rose gift wrap',
-       'tea time teapot in gift box', 'tea time tea set in gift box',
-       'birthday banquet gift wrap', 'gift bag birthday',
-       'romantic images gift wrap set', 'curious images gift wrap set',
-       'blossom images gift wrap set', 'assorted easter gift tags',
-       'empire gift wrap', 'botanical rose gift wrap',
-       'set of three vintage gift wraps', 'mug , dotcomgiftshop.com',
-       'dotcomgiftshop gift voucher £40.00',
-       'dotcomgiftshop gift voucher £50.00',
-       'dotcomgiftshop gift voucher £30.00',
-       'dotcomgiftshop gift voucher £20.00', 'the king gift bag',
-       'botanical lavender gift wrap', 'dotcomgiftshop tea towel',
-       'dotcomgiftshop gift voucher £10.00',
-       'circus parade baby gift set', 'spaceboy baby gift set',
-       'i love london baby gift set', 'dolly girl baby gift set',
-       'botanical lily gift wrap', 'vintage christmas gift sack',
-       'the king gift bag 25x24x12cm', 'vintage christmas paper gift bag',
-       'gift bag large vintage christmas',
-       '6 gift tags vintage christmas', "6 gift tags 50's christmas",
-       'red spot paper gift bag', 'dotcomgiftshop gift voucher £100.00',
-       'red spot gift bag large', 'gift bag large spot',
-       'vintage christmas gift bag large',
-       "50's christmas paper gift bag", "50's christmas gift bag large",
-       "gift bag large 50's christmas", 'pack of 6 panettone gift boxes'],
-      dtype=object)
-
-```
-*From the above product_only list output,  5 gift cards values are identified. There is no £100 gift voucher.* 
-
-`dotcomgiftshop gift voucher £50.00`  
-`dotcomgiftshop gift voucher £40.00`  
-`dotcomgiftshop gift voucher £30.00`  
-`dotcomgiftshop gift voucher £20.00`  
-`dotcomgiftshop gift voucher £10.00`  
-
-<br>
-
-
-| Unit Price (£) | Quantity |
-|----------------|----------|
-| 8.33           | 8        |
-| 16.67          | 8        |
-| 17.02          | 1        |
-| 25.00          | 6        |
-| 25.53          | 1        |
-| 33.33          | 2        |
-| 34.04          | 1        |
-| 41.67          | 3        |
-| 42.55          | 1        |
-| 83.33          | 1        |
-| **Total**      | **Qty**  |
-| **£744.14**    | **32**   |
-
-<br>
-
-Since there are different gift voucher names/values, we should normalise the description before grouping them together. So that it output correct average unitprice.
+### 6.2.Global Top 10 Products by Average Unit Price
 
 ```plaintext
 
-# Normalise Gift voucher Description before grouping them:
+# Ensure TotalPrice is calculated
+df_cleaned['TotalPrice'] = df_cleaned['Quantity'] * df_cleaned['UnitPrice']
+df_cleaned['Description'] = df_cleaned['Description'].str.strip().str.upper()
 
-df_products_only['Description'] = (
-    df_products_only['Description']
-    .str.strip()
-    .str.lower()
-    .replace(r'dotcomgiftshop gift voucher £\d+\.00', 'gift voucher', regex=True)
-)
-```
+# Filter valid rows (positive quantity and price)
+df_valid = df_cleaned[(df_cleaned['Quantity'] > 0) & (df_cleaned['UnitPrice'] > 0)].copy()
 
-**Then run the new code**
+# Exclude non-physical/operational items
+exclude_keywords = ['MANUAL', 'ADJUST', 'POSTAGE', 'CARRIAGE', 'FEE', 'BANK CHARGES', 'DOTCOM']
+physical_products_df = df_valid[~df_valid['Description'].str.contains('|'.join(exclude_keywords), na=False)]
 
-```plaintext
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
-
-# 1. Clean and normalise descriptions
-df_products_only['Description'] = (
-    df_products_only['Description']
-    .str.strip()
-    .str.lower()
-    .replace(r'dotcomgiftshop gift voucher £\d+\.00', 'gift voucher', regex=True)
-)
-
-# 2. Calculate weighted average unit price (with deprecation warning handled)
-avg_unit_price_weighted = (
-    df_products_only.groupby('Description', group_keys=False)
-    .apply(
-        lambda x: pd.Series({
-            'Total': (x['UnitPrice'] * x['Quantity']).sum(),
-            'Quantity': x['Quantity'].sum(),
-            'AvgUnitPrice': (x['UnitPrice'] * x['Quantity']).sum() / x['Quantity'].sum()
-        }),
-        include_groups=False
-    )
-    .sort_values('AvgUnitPrice', ascending=False)
+# Calculate average unit price for physical products
+avg_physical_price_df = (
+    physical_products_df.groupby('Description')['UnitPrice']
+    .mean()
     .reset_index()
+    .sort_values(by='UnitPrice', ascending=False)
+    .head(10)
 )
 
-# 3. Get top 10 products by average unit price
-top10 = avg_unit_price_weighted.nlargest(10, 'AvgUnitPrice')
-
-# 4. Plotting
-plt.figure(figsize=(10, 6))
-ax = sns.barplot(
-    data=top10,
-    x='AvgUnitPrice',
-    y='Description',
-    hue='Description',
-    palette='mako',
-    dodge=False,
-    legend=False
-)
-
-# Format x-axis ticks as £ currency
-formatter = FuncFormatter(lambda x, _: f'£{x:,.2f}')
-ax.xaxis.set_major_formatter(formatter)
-
-# Add value labels inside bars
-for i, (value, name) in enumerate(zip(top10['AvgUnitPrice'], top10['Description'])):
-    ax.text(
-        value - (value * 0.01),
-        i,
-        f'£{value:,.2f}',
-        va='center',
-        ha='right',
-        fontsize=9,
-        color='white',
-        fontweight='bold'
-    )
-
-plt.title('Top 10 Products by Average Unit Price (Filtered - Weighted)')
-plt.xlabel('Avg Unit Price (£)')
-plt.ylabel('Product Description')
-plt.grid(axis='x', linestyle='--', alpha=0.6)
-plt.tight_layout()
-plt.show()
+# Format and rename columns
+avg_physical_price_df['UnitPrice'] = avg_physical_price_df['UnitPrice'].round(2)
+avg_physical_price_df.rename(columns={'Description': 'Product Name', 'UnitPrice': 'Average Unit Price (£)'}, inplace=True)
 ```
-
-<br>
-
-![alt text](image-17.png)
-
-<br>
-
-### Following the normalisation of gift voucher descriptions, the Gift Voucher is no longer ranked among the top 10 products by weighted average unit price.
-
-<br>
-
-### 6.3. Top 10 Most Popular Products by Quantity Sold using matplotlib
+<bar>
 
 ```plaintext
- Product Analysis: Top 10 Products by Quantity Sold (Most Popular)
-import matplotlib.pyplot as plt
-import seaborn as sns
-from matplotlib.ticker import FuncFormatter
-
-# Calculate total quantity sold by product
-top_quantity_products = (
-    df_products_only.groupby('Description')['Quantity']
-    .sum()
-    .nlargest(10)
-    .reset_index()
-)
-
-# Plot
-plt.figure(figsize=(10, 6))
-ax = sns.barplot(
-    data=top_quantity_products,
-    x='Quantity',
-    y='Description',
-    hue='Description',
-    palette='crest',
-    dodge=False,
-    legend=False
-)
-
-# Format value labels
-for i, (value, name) in enumerate(zip(top_quantity_products['Quantity'], top_quantity_products['Description'])):
-    ax.text(
-        value - (value * 0.01),
-        i,
-        f'{value:,.0f}',
-        va='center',
-        ha='right',
-        fontsize=9,
-        color='white',
-        fontweight='bold'
-    )
-
-plt.title('Top 10 Most Popular Products by Quantity Sold')
-plt.xlabel('Total Units Sold')
-plt.ylabel('Product Description')
-plt.grid(axis='x', linestyle='--', alpha=0.6)
-plt.tight_layout()
-plt.show()
-```
-
-<br>
-
-![alt text](image-22.png)
-
-<br>
-
-### 6.4. Top 10 Most Popular Products by Quantity Sold Interactive Visualisation using Plotly
-
-```plaintext
-
 import plotly.express as px
 
-# Prepare data for interactive chart (top 10 most popular by quantity sold)
-top_quantity_products_plotly = (
-    df_products_only.groupby('Description')['Quantity']
-    .sum()
-    .nlargest(10)
-    .reset_index()
-)
-
 fig = px.bar(
-    top_quantity_products_plotly,
-    x='Quantity',
-    y='Description',
+    avg_physical_price_df,
+    x='Average Unit Price (£)',
+    y='Product Name',
     orientation='h',
-    text='Quantity',
-    title='Top 10 Most Popular Products by Quantity Sold (Interactive)',
-    labels={'Quantity': 'Total Units Sold', 'Description': 'Product'},
-    color='Quantity',
-    color_continuous_scale='Blues'
+    title='Top 10 Physical Products by Average Unit Price (£)',
+    template='plotly_white',
+    text='Average Unit Price (£)',
+    color='Average Unit Price (£)',
+    color_continuous_scale='sunset'
 )
 
-fig.update_traces(texttemplate='%{text}', textposition='inside')
-fig.update_layout(yaxis=dict(autorange='reversed'))
+fig.update_traces(textposition='inside')
+fig.update_layout(
+    yaxis={'categoryorder': 'total ascending'},
+    xaxis_tickprefix='£',
+    xaxis_tickformat=',.2f',
+    hoverlabel=dict(namelength=-1),
+    coloraxis_showscale=False
+)
+
 fig.show()
 ```
+<br>
 
-### Click the link [Top 10 most popular Products by quantity sold here](http://127.0.0.1:58754/)
+![global top10 product average unitprice](image-34.png)
 
 <br>
 
-![alt text](image-23.png)
-
-<br>
 
 
 
@@ -1136,32 +901,100 @@ display(admin_fee_totals)
 <br>
 
 
+## 7. Marketing Strategy & Recommendation for Online Retail Growth
 
 
 
+## Executive Summary  
+Our data-driven retail analysis reveals that the UK is the core revenue engine, accounting for a dominant share of global sales. However, untapped global segments, product pricing inefficiencies, and customer recency insights present clear growth opportunities. This marketing strategy leverages these insights to optimise revenue, increase customer retention, and expand globally. 
 
+---
 
-## Business Requirements
-- Identify high-value and at-risk customers
-- Discover popular and premium-priced products
-- Detect seasonal trends and sales patterns
-- Propose pricing, promotion, and customer reactivation strategies
+## 1. Focus on the UK Market (Core Growth Engine)  
+- The UK accounts for approximately 90%+ of sales for most top products (e.g., Party Bunting, White Heart T-Light Holder).  
+- Daily UK sales trend shows consistent demand with sharp seasonal spikes in Q4.  
 
+**Action Plan:**  
+- Launch seasonal campaigns around peak months (e.g., October to December).  
+- Offer product bundles for bestsellers such as Paper Craft and T-Light Holders.  
+- Strengthen logistics and fulfilment to support high-frequency buyers.
 
-<br>
+---
 
+## 2. Targeted Global Expansion (Diversify Revenue Sources)  
+- Global markets such as the Netherlands, France, and EIRE show promising but underutilised sales trends.  
+- The UK dominates sales (e.g., 100% for Paper Craft), indicating a potential over-reliance.  
 
+**Action Plan:**  
+- Run geo-targeted campaigns in selected EU markets, using top-performing UK products.  
+- Launch localised promotions that mirror UK product popularity.  
+- Build partnerships with regional distributors to improve overseas delivery efficiency.
 
+---
 
-## Project Plan
-### High-Level Steps:
-1. Data extraction and loading
-2. Cleaning and transformation
-3. Exploratory analysis and visualisation
-4. Recency, Frequency, Monetary (RFM) segmentation
-   - Recency:  how recently a customer made a purchase
-   - Frequency: how often they purchase
-   - Monetary: how much money they spend
-5. Strategic recommendations
-6. Reflection and documentation
+## 3. Product Strategy: Prioritise High-Volume, High-Potential Items  
+- RABBIT NIGHT LIGHT sold over 15,000 units in the UK but did not appear in the top 10 revenue chart, indicating it is a volume-driven product with a lower price point.  
 
+**Action Plan:**  
+- Introduce value packs or multi-buy bundles for high-volume products.  
+- Position low-ticket, high-frequency products in upsell or cross-sell funnels.  
+- Pair these with higher-margin products to increase average order value.
+
+---
+
+## 4. Premium Product Positioning and Pricing Intelligence  
+- Premium items such as Picnic Baskets (£649.50) and Kitchen Cabinets are priced high and contribute through low-frequency, high-margin sales.  
+
+**Action Plan:**  
+- Launch limited-edition or artisan product collections to reinforce exclusivity.  
+- Use storytelling, lifestyle imagery, and user testimonials to justify pricing.  
+- Run abandoned cart recovery campaigns targeting premium product visitors.
+
+---
+
+## 5. Segmented Marketing Using Customer Insights  
+RFM analysis reveals the following customer distribution:  
+- High-Value: 11.25%  
+- High-Value (Less Recent): 22.34%  
+- Moderate: 48.22%  
+- At-Risk: 18.19%  
+
+**Action Plan:**  
+- Deliver targeted email and SMS campaigns to retain “Less Recent” and “At-Risk” customers.  
+- Offer VIP rewards or early-access incentives for “High-Value” customers.  
+- Implement reactivation strategies with personalised offers or reminders.  
+- Use surveys to collect feedback on drivers of satisfaction and churn.
+
+---
+
+## 6. Identify and Leverage Wholesale and Bulk Buyer Opportunities  
+- The dataset shows a **large spread in quantity and unit price** — some sales involve extremely high quantities (e.g., max quantity of 80,995 units and max price of £13,541), indicating the presence of **wholesale or bulk purchase behaviour**.
+
+**Action Plan:**  
+- Segment bulk buyers and target them with dedicated **wholesale pricing or tiered discounting**.  
+- Create a **“trade account” registration** path to serve business buyers.  
+- Develop product packaging and shipping methods optimised for large volume orders.
+
+---
+
+## 7. Reduce Dependency on Operational Transaction Revenue  
+- Non-product revenue sources like "Amazon Fee", "Adjust Bad Debt", "Bank Charges", and "Carriage" currently contribute significantly to total revenue.  
+
+**Action Plan:**  
+- Conduct an operational audit to isolate and reduce reliance on admin revenue.  
+- Shift focus to driving product-based income through promotions and value-added offerings.  
+- Improve transparency in financial reporting by segmenting transaction types.
+
+---
+
+## Key Metrics to Monitor  
+- Revenue by product, region, and customer segment  
+- Quantity sold vs. average unit price per product  
+- Customer repeat rate and days since last purchase  
+- Average basket value before and after campaign execution  
+- Ratio of bulk vs. individual purchases
+
+---
+
+## Conclusion  
+This strategy recommends defending the UK’s stronghold, unlocking global revenue potential, strategically pricing and bundling products, and reactivating customer segments based on RFM segmentation. By reducing operational fee dependency, leveraging bulk buying behaviour, and focusing on product-based growth, the business can drive sustainable performance across all customer segments.
