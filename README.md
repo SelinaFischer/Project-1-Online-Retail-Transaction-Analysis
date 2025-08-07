@@ -9,7 +9,7 @@
 
 * [ETL Process &  Exploratory Data Analysis](https://github.com/SelinaFischer/Project-1-Online-Retail-Transaction-Analysis/blob/main/jupyter_notebooks/etl_data_investigation.ipynb)
 
-
+* [Project Board](https://github.com/users/SelinaFischer/projects/4)
 
 <br>
 
