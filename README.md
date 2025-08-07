@@ -1,6 +1,13 @@
 
 
-![alt text](image-38.png)
+![Project Cover](image-38.png)
+
+
+## Navigation
+
+* [README](https://github.com/SelinaFischer/Project-1-Online-Retail-Transaction-Analysis/blob/main/README.md)
+
+* [ETL Process &  Exploratory Data Analysis](https://github.com/SelinaFischer/Project-1-Online-Retail-Transaction-Analysis/blob/main/jupyter_notebooks/etl_data_investigation.ipynb)
 
 
 
